@@ -13,11 +13,19 @@
 	],
 	"author": "Code Resolution",
 	"license": "MIT",
+	"scripts": {
+		"test": "jest"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/coderesolution/postcss-size-clamp"
 	},
 	"peerDependencies": {
 		"postcss": "^8.0.0"
+	},
+	"devDependencies": {
+		"jest": "^29.7.0",
+		"jest-postcss": "^0.1.0",
+		"postcss": "^8.4.47"
 	}
 }
