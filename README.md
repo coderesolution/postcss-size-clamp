@@ -5,12 +5,15 @@ A PostCSS plugin that generates fluid typography using modern CSS `clamp()` calc
 # PostCSS Size Clamp
 
 [![NPM Version](https://img.shields.io/npm/v/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
+[![NPM Downloads](https://img.shields.io/npm/dm/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PostCSS](https://img.shields.io/badge/PostCSS-8.0+-blue.svg)](https://github.com/postcss/postcss)
-[![Dependencies Status](https://status.david-dm.org/gh/elliottmangham/postcss-size-clamp.svg)](https://david-dm.org/elliottmangham/postcss-size-clamp)
+[![Known Vulnerabilities](https://snyk.io/test/github/coderesolution/postcss-size-clamp/badge.svg)](https://snyk.io/test/github/coderesolution/postcss-size-clamp)
+[![Tests](https://github.com/coderesolution/postcss-size-clamp/workflows/Test/badge.svg)](https://github.com/coderesolution/postcss-size-clamp/actions)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/postcss-size-clamp)](https://bundlephobia.com/package/postcss-size-clamp)
+[![GitHub stars](https://img.shields.io/github/stars/coderesolution/postcss-size-clamp.svg?style=social&label=Star)](https://github.com/coderesolution/postcss-size-clamp)
 
-This plugin was inspired by the excellent [postcss-responsive-type](https://github.com/madeleineostoja/postcss-responsive-type). We initially [forked it](https://github.com/elliottmangham/postcss-responsive-type) to add container query support and `cqw` calculations, but ultimately decided to create a new plugin leveraging modern CSS capabilities and greater performance.
+This plugin was inspired by the excellent [postcss-responsive-type](https://github.com/madeleineostoja/postcss-responsive-type). We initially [forked it](https://github.com/coderesolution/postcss-responsive-type) to add container query support and `cqw` calculations, but ultimately decided to create a new plugin leveraging modern CSS capabilities and greater performance.
 
 Unlike its predecessor, this plugin:
 
