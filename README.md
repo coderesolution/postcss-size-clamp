@@ -2,8 +2,6 @@
 
 A PostCSS plugin that generates fluid typography using modern CSS `clamp()` calculations.
 
-# PostCSS Size Clamp
-
 [![NPM Version](https://img.shields.io/npm/v/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
 [![NPM Downloads](https://img.shields.io/npm/dm/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
