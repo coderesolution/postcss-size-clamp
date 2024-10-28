@@ -7,6 +7,8 @@ A PostCSS plugin that generates fluid typography using modern CSS `clamp()` calc
 [![NPM Version](https://img.shields.io/npm/v/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PostCSS](https://img.shields.io/badge/PostCSS-8.0+-blue.svg)](https://github.com/postcss/postcss)
+[![Dependencies Status](https://status.david-dm.org/gh/elliottmangham/postcss-size-clamp.svg)](https://david-dm.org/elliottmangham/postcss-size-clamp)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/postcss-size-clamp)](https://bundlephobia.com/package/postcss-size-clamp)
 
 This plugin was inspired by the excellent [postcss-responsive-type](https://github.com/madeleineostoja/postcss-responsive-type). We initially [forked it](https://github.com/elliottmangham/postcss-responsive-type) to add container query support and `cqw` calculations, but ultimately decided to create a new plugin leveraging modern CSS capabilities and greater performance.
 
