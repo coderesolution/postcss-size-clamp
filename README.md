@@ -69,6 +69,7 @@ Outputs:
 ```css
 .title {
 	font-size: responsive 16px 32px;
+	line-height: 1.5;
 }
 ```
 
