@@ -1,0 +1,23 @@
+{
+	"name": "postcss-size-clamp",
+	"version": "1.0.0",
+	"description": "PostCSS plugin for fluid typography using modern CSS clamp()",
+	"main": "index.js",
+	"keywords": [
+		"postcss",
+		"postcss-plugin",
+		"css",
+		"fluid",
+		"typography",
+		"clamp"
+	],
+	"author": "Code Resolution",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/coderesolution/postcss-size-clamp"
+	},
+	"peerDependencies": {
+		"postcss": "^8.0.0"
+	}
+}
