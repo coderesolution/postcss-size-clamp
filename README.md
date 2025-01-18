@@ -1,6 +1,6 @@
 # PostCSS Size Clamp
 
-A PostCSS plugin that generates fluid typography using modern CSS `clamp()` calculations.
+A PostCSS plugin that generates fluid values using modern CSS `clamp()` calculations.
 
 [![NPM Version](https://img.shields.io/npm/v/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
 [![NPM Downloads](https://img.shields.io/npm/dm/postcss-size-clamp.svg)](https://www.npmjs.com/package/postcss-size-clamp)
@@ -11,14 +11,15 @@ A PostCSS plugin that generates fluid typography using modern CSS `clamp()` calc
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/postcss-size-clamp)](https://bundlephobia.com/package/postcss-size-clamp)
 [![GitHub stars](https://img.shields.io/github/stars/coderesolution/postcss-size-clamp.svg?style=social&label=Star)](https://github.com/coderesolution/postcss-size-clamp)
 
-This plugin was inspired by the excellent [postcss-responsive-type](https://github.com/madeleineostoja/postcss-responsive-type). We initially [forked it](https://github.com/coderesolution/postcss-responsive-type) to add container query support and `cqw` calculations, but ultimately decided to create a new plugin leveraging modern CSS capabilities and greater performance.
+This plugin was inspired by the excellent [postcss-responsive-type](https://github.com/madeleineostoja/postcss-responsive-type). While it started as a typography solution, it has evolved into a comprehensive fluid value generator for any CSS property.
 
-Unlike its predecessor, this plugin:
+Unlike similar plugins, this plugin:
 
 -   Outputs a single line of CSS using `clamp()` instead of multiple media/container queries
 -   Pre-calculates values for optimized browser rendering
 -   Supports container query units (`cqw`, `cqi`, `cqb`)
--   Includes a handy line-height shorthand syntax
+-   Works with any CSS property that accepts pixel values
+-   Includes a handy line-height shorthand syntax for typography
 
 ## Installation
 
@@ -33,8 +34,9 @@ npm install postcss-size-clamp --save-dev
 module.exports = {
 	plugins: [
 		require('postcss-size-clamp')({
-			fontRange: [420, 1620], // default viewport/container range
-			fontRangeUnit: 'cqw', // default unit (vw, cqw, cqi, cqb)
+			range: [420, 1620],     // default viewport/container range
+			unit: 'cqw',            // default unit (vw, cqw, cqi, cqb)
+			blacklist: ['container-name'] // properties to ignore
 		}),
 		require('postcss-preset-env'),
 	],
@@ -44,20 +46,24 @@ module.exports = {
 **Basic Usage**
 
 ```css
-.title {
+.element {
 	font-size: responsive 16px 32px;
+	margin-block: responsive 20px 40px;
+	padding-inline: responsive 16px 32px;
 }
 ```
 
 Outputs:
 
 ```css
-.title {
+.element {
 	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
+	margin-block: clamp(20px, calc(14.4px + 1.33333cqw), 40px);
+	padding-inline: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 }
 ```
 
-**With Line Height Shorthand**
+**With Line Height Shorthand (Typography)**
 
 ```css
 .title {
@@ -69,7 +75,7 @@ Outputs:
 
 ```css
 .title {
-	font-size: responsive 16px 32px;
+	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 	line-height: 1.5;
 }
 ```
@@ -77,30 +83,33 @@ Outputs:
 **Custom Range and Units**
 
 ```css
-.title {
-	font-size: responsive 20px 48px;
-	font-range: 768px 1920px;
-	font-range-unit: vw;
+.element {
+	margin: responsive 20px 48px;
+	font-size: responsive 16px 24px;
+	fluid-range: 768px 1920px;
+	fluid-unit: vw;
 }
 ```
 
 Outputs:
 
 ```css
-.title {
-	font-size: clamp(20px, calc(1.33333px + 2.43056vw), 48px);
+.element {
+	margin: clamp(20px, calc(1.33333px + 2.43056vw), 48px);
+	font-size: clamp(16px, calc(1.33333px + 1.18056vw), 24px);
 }
 ```
 
 ## Features
 
 **Global Configuration**
-Set default ranges and units in your PostCSS config to maintain consistency across your project:
+Set default ranges and units in your PostCSS config:
 
 ```js
 require('postcss-size-clamp')({
-	fontRange: [420, 1620], // min and max viewport/container width
-	fontRangeUnit: 'cqw', // viewport or container query unit
+	range: [420, 1620],     // min and max viewport/container width
+	unit: 'cqw',            // viewport or container query unit
+	blacklist: ['container-name'] // properties to ignore
 });
 ```
 
@@ -112,21 +121,23 @@ require('postcss-size-clamp')({
 -   `cqb`: Container query block size
 
 **Per-Declaration Overrides**
-Override global settings using `font-range` and `font-range-unit` properties:
+Override global settings using `fluid-range` and `fluid-unit` properties:
 
 ```css
 .custom {
-	font-size: responsive 16px 32px;
-	font-range: 320px 1440px;
-	font-range-unit: cqi;
+	padding: responsive 16px 32px;
+	fluid-range: 320px 1440px;
+	fluid-unit: cqi;
 }
 ```
 
-**Line Height Shorthand**
-Add line-height using the shorthand syntax:
+**Property Blacklist**
+Some properties might not work well with fluid values or could cause issues. These can be blacklisted globally:
 
-```css
-font-size: responsive <min>px <max>px / <line-height>;
+```js
+require('postcss-size-clamp')({
+	blacklist: ['container-name', 'display', 'position']
+});
 ```
 
 ## Browser Support

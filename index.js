@@ -1,9 +1,10 @@
 const DEFAULT_OPTIONS = {
-	fontRange: [420, 1620],
-	fontRangeUnit: 'cqw',
+	range: [420, 1620],
+	unit: 'cqw',
+	blacklist: ['container-name']
 };
 
-const VALID_RANGE_UNITS = ['vw', 'cqw', 'cqi', 'cqb'];
+const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb'];
 
 module.exports = (opts = {}) => {
 	const options = {
@@ -11,19 +12,38 @@ module.exports = (opts = {}) => {
 		...opts,
 	};
 
-	if (!VALID_RANGE_UNITS.includes(options.fontRangeUnit)) {
-		throw new Error(`Invalid font-range-unit. Must be one of: ${VALID_RANGE_UNITS.join(', ')}`);
+	if (!VALID_UNITS.includes(options.unit)) {
+		throw new Error(`Invalid unit. Must be one of: ${VALID_UNITS.join(', ')}`);
 	}
 
 	return {
 		postcssPlugin: 'postcss-size-clamp',
 		Declaration(decl) {
-			if (decl.prop !== 'font-size') return;
+			// Skip blacklisted properties
+			if (options.blacklist.includes(decl.prop)) return;
 
 			const value = decl.value.trim();
-
-			// Check if this is a responsive font declaration
 			if (!value.startsWith('responsive')) return;
+
+			// Get fluid range and unit from declaration or options
+			let [minRange, maxRange] = options.range;
+			let rangeUnit = options.unit;
+
+			// Check for fluid-range property in the rule
+			const fluidRangeDecl = decl.parent.nodes.find(
+				node => node.type === 'decl' && node.prop === 'fluid-range'
+			);
+
+			if (fluidRangeDecl) {
+				const range = fluidRangeDecl.value
+					.split(' ')
+					.map(val => parseFloat(val.replace('px', '')))
+					.filter(val => !isNaN(val));
+
+				if (range.length === 2) {
+					[minRange, maxRange] = range;
+				}
+			}
 
 			// Split the value to check for line-height
 			const [fontPart, lineHeightPart] = value.split('/').map((part) => part.trim());
@@ -41,38 +61,6 @@ module.exports = (opts = {}) => {
 
 			if (isNaN(minSize) || isNaN(maxSize)) {
 				throw decl.error('Invalid responsive font-size syntax. Use: font-size: responsive <min>px <max>px');
-			}
-
-			// Get font range from declaration or options
-			let [minRange, maxRange] = options.fontRange;
-
-			// Check for font-range property in the rule
-			const fontRangeDecl = decl.parent.nodes.find((node) => node.type === 'decl' && node.prop === 'font-range');
-
-			if (fontRangeDecl) {
-				const range = fontRangeDecl.value
-					.split(' ')
-					.map((val) => parseFloat(val.replace('px', '')))
-					.filter((val) => !isNaN(val));
-
-				if (range.length === 2) {
-					[minRange, maxRange] = range;
-				}
-				fontRangeDecl.remove();
-			}
-
-			// Get font-range-unit from declaration or options
-			let rangeUnit = options.fontRangeUnit;
-
-			const fontRangeUnitDecl = decl.parent.nodes.find(
-				(node) => node.type === 'decl' && node.prop === 'font-range-unit'
-			);
-
-			if (fontRangeUnitDecl) {
-				if (VALID_RANGE_UNITS.includes(fontRangeUnitDecl.value)) {
-					rangeUnit = fontRangeUnitDecl.value;
-				}
-				fontRangeUnitDecl.remove();
 			}
 
 			// Generate the clamp function
