@@ -47,6 +47,7 @@ module.exports = {
 
 ```css
 .element {
+	font-size: responsive 16px 32px;
 	margin-block: responsive 20px 40px;
 	padding-inline: responsive 16px 32px;
 	gap: responsive 16px 32px;
@@ -57,11 +58,27 @@ Outputs:
 
 ```css
 .element {
+	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 	margin-block: clamp(20px, calc(14.4px + 1.33333cqw), 40px);
 	padding-inline: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 	gap: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 }
 ```
+
+**Understanding Fluid Values**
+
+The syntax `responsive <min>px <max>px` creates a fluid value that scales between two sizes based on the viewport or container width:
+
+```css
+.example {
+	/* At 420px viewport: font-size = 16px
+	   At 1620px viewport: font-size = 32px
+	   Between: scales proportionally */
+	font-size: responsive 16px 32px;
+}
+```
+
+The default range (420px to 1620px) determines when the value starts and stops scaling. Below 420px it stays at 16px, above 1620px it stays at 32px, and between these values it scales fluidly.
 
 **Custom Range and Units**
 
