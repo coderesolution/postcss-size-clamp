@@ -148,4 +148,12 @@ require('postcss-size-clamp')({
 
 ## Browser Support
 
-While `clamp()`
+While `clamp()` has [excellent browser support](https://caniuse.com/?search=css-clamp), we recommend using this plugin with `postcss-preset-env` for maximum compatibility. Place this plugin before `postcss-preset-env` in your PostCSS config to take advantage of its browser compatibility features.
+
+## Performance
+
+This plugin pre-calculates numerical values where possible, resulting in optimized CSS output. Instead of multiple media queries or complex calculations, it generates a single, efficient line of CSS that browsers can process quickly.
+
+## License
+
+MIT
