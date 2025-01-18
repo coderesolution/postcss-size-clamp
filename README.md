@@ -19,7 +19,7 @@ Unlike similar plugins, this plugin:
 -   Pre-calculates values for optimized browser rendering
 -   Supports container query units (`cqw`, `cqi`, `cqb`)
 -   Works with any CSS property that accepts pixel values
--   Includes a handy line-height shorthand syntax for typography
+-   Includes property blacklisting for granular control
 
 ## Installation
 
@@ -47,9 +47,9 @@ module.exports = {
 
 ```css
 .element {
-	font-size: responsive 16px 32px;
 	margin-block: responsive 20px 40px;
 	padding-inline: responsive 16px 32px;
+	gap: responsive 16px 32px;
 }
 ```
 
@@ -57,26 +57,9 @@ Outputs:
 
 ```css
 .element {
-	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 	margin-block: clamp(20px, calc(14.4px + 1.33333cqw), 40px);
 	padding-inline: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
-}
-```
-
-**With Line Height Shorthand (Typography)**
-
-```css
-.title {
-	font-size: responsive 16px 32px / 1.5;
-}
-```
-
-Outputs:
-
-```css
-.title {
-	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
-	line-height: 1.5;
+	gap: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 }
 ```
 
@@ -85,7 +68,7 @@ Outputs:
 ```css
 .element {
 	margin: responsive 20px 48px;
-	font-size: responsive 16px 24px;
+	width: responsive 280px 560px;
 	fluid-range: 768px 1920px;
 	fluid-unit: vw;
 }
@@ -96,7 +79,7 @@ Outputs:
 ```css
 .element {
 	margin: clamp(20px, calc(1.33333px + 2.43056vw), 48px);
-	font-size: clamp(16px, calc(1.33333px + 1.18056vw), 24px);
+	width: clamp(280px, calc(183.33px + 19.44444vw), 560px);
 }
 ```
 
@@ -136,18 +119,16 @@ Some properties might not work well with fluid values or could cause issues. The
 
 ```js
 require('postcss-size-clamp')({
-	blacklist: ['container-name', 'display', 'position']
+	blacklist: [
+		'container-name',  // Container queries
+		'display',        // Non-numeric properties
+		'position',       // Non-numeric properties
+		'grid-template',  // Complex values
+		'transform'       // Complex values
+	]
 });
 ```
 
 ## Browser Support
 
-While `clamp()` has [excellent browser support](https://caniuse.com/?search=css-clamp), we recommend using this plugin with `postcss-preset-env` for maximum compatibility. Place this plugin before `postcss-preset-env` in your PostCSS config to take advantage of its browser compatibility features.
-
-## Performance
-
-This plugin pre-calculates numerical values where possible, resulting in optimized CSS output. Instead of multiple media queries or complex calculations, it generates a single, efficient line of CSS that browsers can process quickly.
-
-## License
-
-MIT
+While `clamp()`

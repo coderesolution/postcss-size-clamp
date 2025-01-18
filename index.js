@@ -52,7 +52,7 @@ module.exports = (opts = {}) => {
 			const parts = fontPart.split(' ').filter(Boolean);
 
 			if (parts.length !== 3) {
-				throw decl.error('Invalid responsive font-size syntax. Use: font-size: responsive <min>px <max>px');
+				throw decl.error('Invalid responsive syntax. Use: <property>: responsive <min>px <max>px');
 			}
 
 			// Extract min and max values, removing 'px' suffix
@@ -60,7 +60,7 @@ module.exports = (opts = {}) => {
 			const maxSize = parseFloat(parts[2]);
 
 			if (isNaN(minSize) || isNaN(maxSize)) {
-				throw decl.error('Invalid responsive font-size syntax. Use: font-size: responsive <min>px <max>px');
+				throw decl.error('Invalid responsive syntax. Use: <property>: responsive <min>px <max>px');
 			}
 
 			// Generate the clamp function
