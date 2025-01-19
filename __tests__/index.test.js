@@ -102,4 +102,20 @@ describe('postcss-size-clamp', () => {
 		expect(output).toContain('margin: clamp(10px');
 		expect(output).toContain('padding: clamp(15px');
 	});
+
+	it('removes fluid-range and fluid-unit properties from output', async () => {
+		const input = `
+			.test {
+				margin: responsive 20px 48px;
+				padding: responsive 16px 32px;
+				fluid-range: 768px 1920px;
+				fluid-unit: vw;
+			}
+		`;
+		const output = await run(input);
+		expect(output).not.toContain('fluid-range');
+		expect(output).not.toContain('fluid-unit');
+		expect(output).toContain('margin: clamp');
+		expect(output).toContain('padding: clamp');
+	});
 });

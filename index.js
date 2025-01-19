@@ -43,6 +43,21 @@ module.exports = (opts = {}) => {
 				if (range.length === 2) {
 					[minRange, maxRange] = range;
 				}
+				// Remove the fluid-range declaration
+				fluidRangeDecl.remove();
+			}
+
+			// Check for fluid-unit property
+			const fluidUnitDecl = decl.parent.nodes.find(
+				node => node.type === 'decl' && node.prop === 'fluid-unit'
+			);
+
+			if (fluidUnitDecl) {
+				if (VALID_UNITS.includes(fluidUnitDecl.value)) {
+					rangeUnit = fluidUnitDecl.value;
+				}
+				// Remove the fluid-unit declaration
+				fluidUnitDecl.remove();
 			}
 
 			// Split the value to check for line-height
