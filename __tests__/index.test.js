@@ -118,4 +118,83 @@ describe('postcss-size-clamp', () => {
 		expect(output).toContain('margin: clamp');
 		expect(output).toContain('padding: clamp');
 	});
+
+	it('inherits fluid values from parent rules', async () => {
+		const input = `
+			.parent {
+				fluid-range: 768px 1920px;
+				fluid-unit: vw;
+
+				.child {
+					margin: responsive 20px 40px;
+					padding: responsive 10px 20px;
+				}
+			}
+		`;
+		const output = await run(input);
+		expect(output).toContain('100vw - 768px');
+		expect(output).not.toContain('100cqw');
+	});
+
+	it('allows child rules to override parent fluid values', async () => {
+		const input = `
+			.parent {
+				fluid-range: 768px 1920px;
+				fluid-unit: vw;
+
+				.child {
+					margin: responsive 20px 40px;
+					fluid-range: 320px 1440px;
+					fluid-unit: cqi;
+				}
+			}
+		`;
+		const output = await run(input);
+		expect(output).toContain('100cqi - 320px');
+	});
+
+	it('uses cached fluid values for multiple declarations in same rule', async () => {
+		const input = `
+			.test {
+				fluid-range: 768px 1920px;
+				fluid-unit: vw;
+				margin: responsive 20px 40px;
+				padding: responsive 10px 20px;
+				gap: responsive 15px 30px;
+			}
+		`;
+		const output = await run(input);
+		const occurrences = (output.match(/100vw - 768px/g) || []).length;
+		expect(occurrences).toBe(3); // Should appear in all three responsive properties
+	});
+
+	it('maintains separate fluid values for different rules', async () => {
+		const input = `
+			.test-1 {
+				fluid-range: 768px 1920px;
+				fluid-unit: vw;
+				margin: responsive 20px 40px;
+			}
+			.test-2 {
+				fluid-range: 320px 1440px;
+				fluid-unit: cqi;
+				margin: responsive 20px 40px;
+			}
+		`;
+		const output = await run(input);
+		expect(output).toContain('100vw - 768px');
+		expect(output).toContain('100cqi - 320px');
+	});
+
+	it('falls back to global defaults when no fluid values are defined', async () => {
+		const input = `
+			.parent {
+				.child {
+					margin: responsive 20px 40px;
+				}
+			}
+		`;
+		const output = await run(input);
+		expect(output).toContain('100cqw - 420px'); // Default values
+	});
 });
