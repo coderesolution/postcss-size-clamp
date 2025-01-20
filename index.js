@@ -6,6 +6,18 @@ const DEFAULT_OPTIONS = {
 
 const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb'];
 
+const findParentDeclaration = (decl, prop) => {
+	let parent = decl.parent;
+	while (parent) {
+		const declaration = parent.nodes?.find(
+			node => node.type === 'decl' && node.prop === prop
+		);
+		if (declaration) return declaration;
+		parent = parent.parent;
+	}
+	return null;
+};
+
 module.exports = (opts = {}) => {
 	const options = {
 		...DEFAULT_OPTIONS,
@@ -29,10 +41,10 @@ module.exports = (opts = {}) => {
 			let [minRange, maxRange] = options.range;
 			let rangeUnit = options.unit;
 
-			// Check for fluid-range property in the rule
+			// Check for fluid-range property in the current rule or its parents
 			const fluidRangeDecl = decl.parent.nodes.find(
 				node => node.type === 'decl' && node.prop === 'fluid-range'
-			);
+			) || findParentDeclaration(decl, 'fluid-range');
 
 			if (fluidRangeDecl) {
 				const range = fluidRangeDecl.value
@@ -43,21 +55,25 @@ module.exports = (opts = {}) => {
 				if (range.length === 2) {
 					[minRange, maxRange] = range;
 				}
-				// Remove the fluid-range declaration
-				fluidRangeDecl.remove();
+				// Only remove if it's in the current rule
+				if (fluidRangeDecl.parent === decl.parent) {
+					fluidRangeDecl.remove();
+				}
 			}
 
-			// Check for fluid-unit property
+			// Check for fluid-unit property in current rule or its parents
 			const fluidUnitDecl = decl.parent.nodes.find(
 				node => node.type === 'decl' && node.prop === 'fluid-unit'
-			);
+			) || findParentDeclaration(decl, 'fluid-unit');
 
 			if (fluidUnitDecl) {
 				if (VALID_UNITS.includes(fluidUnitDecl.value)) {
 					rangeUnit = fluidUnitDecl.value;
 				}
-				// Remove the fluid-unit declaration
-				fluidUnitDecl.remove();
+				// Only remove if it's in the current rule
+				if (fluidUnitDecl.parent === decl.parent) {
+					fluidUnitDecl.remove();
+				}
 			}
 
 			// Split the value to check for line-height
