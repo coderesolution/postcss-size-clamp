@@ -6,18 +6,6 @@ const DEFAULT_OPTIONS = {
 
 const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb'];
 
-const findParentDeclaration = (decl, prop) => {
-	let parent = decl.parent;
-	while (parent) {
-		const declaration = parent.nodes?.find(
-			node => node.type === 'decl' && node.prop === prop
-		);
-		if (declaration) return declaration;
-		parent = parent.parent;
-	}
-	return null;
-};
-
 module.exports = (opts = {}) => {
 	const options = {
 		...DEFAULT_OPTIONS,
@@ -39,15 +27,14 @@ module.exports = (opts = {}) => {
 
 			// Cache the fluid values on the parent rule if not already done
 			if (!decl.parent._fluidValues) {
-				// Check for fluid-range property in the current rule or its parents
+				// Check for fluid-range and fluid-unit in current rule only
 				const fluidRangeDecl = decl.parent.nodes.find(
 					node => node.type === 'decl' && node.prop === 'fluid-range'
-				) || findParentDeclaration(decl, 'fluid-range');
+				);
 
-				// Check for fluid-unit property in current rule or its parents
 				const fluidUnitDecl = decl.parent.nodes.find(
 					node => node.type === 'decl' && node.prop === 'fluid-unit'
-				) || findParentDeclaration(decl, 'fluid-unit');
+				);
 
 				// Cache the values
 				decl.parent._fluidValues = {
@@ -64,25 +51,18 @@ module.exports = (opts = {}) => {
 					if (range.length === 2) {
 						decl.parent._fluidValues.range = range;
 					}
-					// Only remove if it's in the current rule
-					if (fluidRangeDecl.parent === decl.parent) {
-						fluidRangeDecl.remove();
-					}
+					fluidRangeDecl.remove();
 				}
 
 				if (fluidUnitDecl) {
 					if (VALID_UNITS.includes(fluidUnitDecl.value)) {
 						decl.parent._fluidValues.unit = fluidUnitDecl.value;
 					}
-					// Only remove if it's in the current rule
-					if (fluidUnitDecl.parent === decl.parent) {
-						fluidUnitDecl.remove();
-					}
+					fluidUnitDecl.remove();
 				}
 			}
 
-			// Use the cached values
-			let [minRange, maxRange] = decl.parent._fluidValues.range;
+			const [minRange, maxRange] = decl.parent._fluidValues.range;
 			let rangeUnit = decl.parent._fluidValues.unit;
 
 			// Split the value to check for line-height
