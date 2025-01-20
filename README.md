@@ -52,6 +52,11 @@ module.exports = {
 	padding-inline: responsive 16px 32px;
 	gap: responsive 16px 32px;
 }
+
+/* Typography shorthand with line-height */
+.element {
+	font-size: responsive 16px 32px / 1.5;  /* Sets both font-size and line-height */
+}
 ```
 
 Outputs:
@@ -62,6 +67,11 @@ Outputs:
 	margin-block: clamp(20px, calc(14.4px + 1.33333cqw), 40px);
 	padding-inline: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 	gap: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
+}
+
+.element {
+	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
+	line-height: 1.5;
 }
 ```
 
