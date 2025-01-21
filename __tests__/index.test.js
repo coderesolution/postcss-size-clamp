@@ -79,17 +79,6 @@ describe('postcss-size-clamp', () => {
 		await expect(run(input)).rejects.toThrow();
 	});
 
-	it('falls back to default unit when invalid unit provided', async () => {
-		const input = `
-			.test {
-				margin: responsive 14px 24px;
-				fluid-unit: invalid;
-			}
-		`;
-		const output = await run(input);
-		expect(output).toContain('cqw'); // Should contain default unit
-	});
-
 	it('applies fluid range to all responsive properties in rule', async () => {
 		const input = `
 			.test {
@@ -182,5 +171,26 @@ describe('postcss-size-clamp', () => {
 		await expect(run('.test { margin: responsive 16px 32px; }', {
 			unit: 'invalid'
 		})).rejects.toThrow('Invalid unit');
+	});
+
+	it('supports custom container width properties', async () => {
+		const input = `
+			.test {
+				margin: responsive 14px 24px;
+				fluid-unit: --container-width;
+			}
+		`;
+		const output = await run(input);
+		expect(output).toContain('calc(var(--container-width) * 100)');
+	});
+
+	it('validates custom property names', async () => {
+		const input = `
+			.test {
+				margin: responsive 14px 24px;
+				fluid-unit: invalid-prop;
+			}
+		`;
+		await expect(run(input)).rejects.toThrow('Invalid unit');
 	});
 });

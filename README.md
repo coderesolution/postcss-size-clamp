@@ -18,6 +18,7 @@ Unlike similar plugins, this plugin:
 -   Outputs a single line of CSS using `clamp()` instead of multiple media/container queries
 -   Pre-calculates values for optimized browser rendering
 -   Supports container query units (`cqw`, `cqi`, `cqb`)
+-   Supports custom container widths via CSS custom properties
 -   Works with any CSS property that accepts pixel values
 -   Includes property blacklisting for granular control
 
@@ -110,6 +111,41 @@ Outputs:
 }
 ```
 
+**Custom Container Widths**
+
+You can use CSS custom properties to define specific container widths for fluid scaling:
+
+```css
+/* Define container widths */
+:root {
+    --sidebar-width: 0.25; /* 25% of viewport width */
+    --main-content: 0.75;  /* 75% of viewport width */
+}
+
+/* Use in your components */
+.sidebar {
+    fluid-unit: --sidebar-width;
+    padding: responsive 10px 20px;
+}
+
+.main-content {
+    fluid-unit: --main-content;
+    font-size: responsive 16px 24px;
+}
+```
+
+Outputs:
+
+```css
+.sidebar {
+    padding: clamp(10px, calc(10px + (20 - 10) * ((calc(var(--sidebar-width) * 100) - 420px) / (1620 - 420))), 20px);
+}
+
+.main-content {
+    font-size: clamp(16px, calc(16px + (24 - 16) * ((calc(var(--main-content) * 100) - 420px) / (1620 - 420))), 24px);
+}
+```
+
 ## Features
 
 **Global Configuration**
@@ -130,41 +166,7 @@ require('postcss-size-clamp')({
 -   `cqi`: Container query inline size
 -   `cqb`: Container query block size
 -   `%`: Percentage of the width
+-   `--*`: Custom property (must start with '--' and contain a decimal value between 0 and 1)
 
 **Per-Declaration Overrides**
-Override global settings using `fluid-range` and `fluid-unit` properties:
-
-```css
-.custom {
-	padding: responsive 16px 32px;
-	fluid-range: 320px 1440px;
-	fluid-unit: cqi;
-}
-```
-
-**Property Blacklist**
-Some properties might not work well with fluid values or could cause issues. These can be blacklisted globally:
-
-```js
-require('postcss-size-clamp')({
-	blacklist: [
-		'container-name',  // Container queries
-		'display',        // Non-numeric properties
-		'position',       // Non-numeric properties
-		'grid-template',  // Complex values
-		'transform'       // Complex values
-	]
-});
-```
-
-## Browser Support
-
-While `clamp()` has [excellent browser support](https://caniuse.com/?search=css-clamp), we recommend using this plugin with `postcss-preset-env` for maximum compatibility. Place this plugin before `postcss-preset-env` in your PostCSS config to take advantage of its browser compatibility features.
-
-## Performance
-
-This plugin pre-calculates numerical values where possible, resulting in optimized CSS output. Instead of multiple media queries or complex calculations, it generates a single, efficient line of CSS that browsers can process quickly.
-
-## License
-
-MIT
+Override global settings using `

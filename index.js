@@ -4,7 +4,7 @@ const DEFAULT_OPTIONS = {
 	blacklist: ['container-name']
 };
 
-const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb', '%'];
+const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb', '%', '--*'];
 
 module.exports = (opts = {}) => {
 	const options = {
@@ -12,8 +12,8 @@ module.exports = (opts = {}) => {
 		...opts,
 	};
 
-	if (!VALID_UNITS.includes(options.unit)) {
-		throw new Error(`Invalid unit. Must be one of: ${VALID_UNITS.join(', ')}`);
+	if (!VALID_UNITS.includes(options.unit) && !options.unit.startsWith('--')) {
+		throw new Error(`Invalid unit. Must be one of: ${VALID_UNITS.join(', ')} or a custom property starting with --`);
 	}
 
 	return {
@@ -55,8 +55,9 @@ module.exports = (opts = {}) => {
 				}
 
 				if (fluidUnitDecl) {
-					if (VALID_UNITS.includes(fluidUnitDecl.value)) {
-						decl.parent._fluidValues.unit = fluidUnitDecl.value;
+					const unit = fluidUnitDecl.value;
+					if (VALID_UNITS.includes(unit) || unit.startsWith('--')) {
+						decl.parent._fluidValues.unit = unit;
 					}
 					fluidUnitDecl.remove();
 				}
@@ -83,8 +84,12 @@ module.exports = (opts = {}) => {
 				throw decl.error('Invalid responsive syntax. Use: <property>: responsive <min>px <max>px');
 			}
 
-			// Generate the clamp function
-			const clampValue = `clamp(${minSize}px, calc(${minSize}px + (${maxSize} - ${minSize}) * ((100${rangeUnit} - ${minRange}px) / (${maxRange} - ${minRange}))), ${maxSize}px)`;
+			// Generate the clamp function with custom property support
+			const containerWidth = rangeUnit.startsWith('--') 
+				? `calc(var(${rangeUnit}) * 100)`
+				: `100${rangeUnit}`;
+
+			const clampValue = `clamp(${minSize}px, calc(${minSize}px + (${maxSize} - ${minSize}) * ((${containerWidth} - ${minRange}px) / (${maxRange} - ${minRange}))), ${maxSize}px)`;
 
 			// Replace the declaration value
 			decl.value = clampValue;
