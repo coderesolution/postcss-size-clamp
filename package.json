@@ -14,7 +14,8 @@
 	"author": "Code Resolution",
 	"license": "MIT",
 	"scripts": {
-		"test": "jest"
+		"test": "jest",
+		"postpublish": "git push --follow-tags"
 	},
 	"repository": {
 		"type": "git",
