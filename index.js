@@ -1,6 +1,6 @@
 const DEFAULT_OPTIONS = {
     range: [420, 1620],
-    unit: 'cqw',
+    unit: 'vw',
     blacklist: [
         'container-name',
         'grid-template-areas',
@@ -97,11 +97,11 @@ module.exports = (opts = {}) => {
 			}
 
 			// Generate the clamp function with custom property support
-			const containerWidth = rangeUnit.startsWith('--') 
-				? `calc(var(${rangeUnit}) * 100)`
-				: `100${rangeUnit}`;
+            const containerWidth = rangeUnit.startsWith('--') 
+                ? `var(${rangeUnit})`
+                : `100${rangeUnit}`;
 
-			const clampValue = `clamp(${minSize}px, calc(${minSize}px + (${maxSize} - ${minSize}) * ((${containerWidth} - ${minRange}px) / (${maxRange} - ${minRange}))), ${maxSize}px)`;
+            const clampValue = `clamp(${minSize}px, calc(${minSize}px + (${maxSize} - ${minSize}) * ((${containerWidth} - ${minRange}px) / (${maxRange} - ${minRange}))), ${maxSize}px)`;
 
 			// Replace the declaration value
 			decl.value = clampValue;

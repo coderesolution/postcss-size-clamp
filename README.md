@@ -149,11 +149,11 @@ Outputs:
 
 ```css
 .sidebar {
-    padding: clamp(10px, calc(10px + (20 - 10) * ((calc(var(--sidebar-width) * 100) - 420px) / (1620 - 420))), 20px);
+    padding: clamp(10px, calc(10px + (20 - 10) * (var(--sidebar-width) - 420px) / (1620 - 420))), 20px);
 }
 
 .main-content {
-    font-size: clamp(16px, calc(16px + (24 - 16) * ((calc(var(--main-content) * 100) - 420px) / (1620 - 420))), 24px);
+    font-size: clamp(16px, calc(16px + (24 - 16) * (var(--main-content) - 420px) / (1620 - 420))), 24px);
 }
 ```
 
@@ -180,4 +180,39 @@ require('postcss-size-clamp')({
 -   `--*`: Custom property (must start with '--' and contain a decimal value between 0 and 1)
 
 **Per-Declaration Overrides**
-Override global settings using `
+Override global settings using `fluid-range` and `fluid-unit` properties:
+
+```css
+.custom {
+	padding: responsive 16px 32px;
+	fluid-range: 320px 1440px;
+	fluid-unit: cqi;
+}
+```
+
+**Property Blacklist**
+Some properties might not work well with fluid values or could cause issues. These can be blacklisted globally:
+
+```js
+require('postcss-size-clamp')({
+	blacklist: [
+		'container-name',  // Container queries
+		'display',        // Non-numeric properties
+		'position',       // Non-numeric properties
+		'grid-template',  // Complex values
+		'transform'       // Complex values
+	]
+});
+```
+
+## Browser Support
+
+While `clamp()` has [excellent browser support](https://caniuse.com/?search=css-clamp), we recommend using this plugin with `postcss-preset-env` for maximum compatibility. Place this plugin before `postcss-preset-env` in your PostCSS config to take advantage of its browser compatibility features.
+
+## Performance
+
+This plugin pre-calculates numerical values where possible, resulting in optimized CSS output. Instead of multiple media queries or complex calculations, it generates a single, efficient line of CSS that browsers can process quickly.
+
+## License
+
+MIT

@@ -150,7 +150,7 @@ describe('postcss-size-clamp', () => {
 			}
 		`;
 		const output = await run(input);
-		expect(output).toContain('100cqw - 420px'); // Default values
+		expect(output).toContain('100vw - 420px'); // Default values
 	});
 
 	it('supports all valid fluid units', async () => {
@@ -191,6 +191,6 @@ describe('postcss-size-clamp', () => {
 			}
 		`;
 		const output = await run(input);
-		expect(output).toContain('calc(var(--container-width) * 100)');
+		expect(output).toContain('var(--container-width)');
 	});
 });
