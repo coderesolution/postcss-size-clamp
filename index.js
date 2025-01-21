@@ -67,9 +67,10 @@ module.exports = (opts = {}) => {
 
 				if (fluidUnitDecl) {
 					const unit = fluidUnitDecl.value;
-					if (VALID_UNITS.includes(unit) || unit.startsWith('--')) {
-						decl.parent._fluidValues.unit = unit;
+					if (!VALID_UNITS.includes(unit) && !unit.startsWith('--')) {
+						throw fluidUnitDecl.error(`Invalid unit. Must be one of: ${VALID_UNITS.join(', ')} or a custom property starting with --`);
 					}
+					decl.parent._fluidValues.unit = unit;
 					fluidUnitDecl.remove();
 				}
 			}

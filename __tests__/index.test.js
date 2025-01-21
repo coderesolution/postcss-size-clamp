@@ -173,6 +173,16 @@ describe('postcss-size-clamp', () => {
 		})).rejects.toThrow('Invalid unit');
 	});
 
+	it('throws error for invalid fluid-unit value', async () => {
+		const input = `
+			.test {
+				margin: responsive 14px 24px;
+				fluid-unit: invalid-unit;
+			}
+		`;
+		await expect(run(input)).rejects.toThrow('Invalid unit');
+	});
+
 	it('supports custom container width properties', async () => {
 		const input = `
 			.test {
@@ -182,15 +192,5 @@ describe('postcss-size-clamp', () => {
 		`;
 		const output = await run(input);
 		expect(output).toContain('calc(var(--container-width) * 100)');
-	});
-
-	it('validates custom property names', async () => {
-		const input = `
-			.test {
-				margin: responsive 14px 24px;
-				fluid-unit: invalid-prop;
-			}
-		`;
-		await expect(run(input)).rejects.toThrow('Invalid unit');
 	});
 });
