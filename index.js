@@ -4,7 +4,7 @@ const DEFAULT_OPTIONS = {
 	blacklist: ['container-name']
 };
 
-const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb'];
+const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb', '%'];
 
 module.exports = (opts = {}) => {
 	const options = {

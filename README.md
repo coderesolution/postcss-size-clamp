@@ -35,7 +35,7 @@ module.exports = {
 	plugins: [
 		require('postcss-size-clamp')({
 			range: [420, 1620],     // default viewport/container range
-			unit: 'cqw',            // default unit (vw, cqw, cqi, cqb)
+			unit: 'cqw',            // default unit (vw, cqw, cqi, cqb, %)
 			blacklist: ['container-name'] // properties to ignore
 		}),
 		require('postcss-preset-env'),
@@ -129,6 +129,7 @@ require('postcss-size-clamp')({
 -   `cqw`: Container query width
 -   `cqi`: Container query inline size
 -   `cqb`: Container query block size
+-   `%`: Percentage of the width
 
 **Per-Declaration Overrides**
 Override global settings using `fluid-range` and `fluid-unit` properties:

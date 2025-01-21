@@ -163,4 +163,24 @@ describe('postcss-size-clamp', () => {
 		const output = await run(input);
 		expect(output).toContain('100cqw - 420px'); // Default values
 	});
+
+	it('supports all valid fluid units', async () => {
+		const units = ['cqb', '%'];
+		for (const unit of units) {
+			const input = `
+				.test {
+					margin: responsive 14px 24px;
+					fluid-unit: ${unit};
+				}
+			`;
+			const output = await run(input);
+			expect(output).toContain(unit);
+		}
+	});
+
+	it('throws error for invalid unit in plugin options', async () => {
+		await expect(run('.test { margin: responsive 16px 32px; }', {
+			unit: 'invalid'
+		})).rejects.toThrow('Invalid unit');
+	});
 });
