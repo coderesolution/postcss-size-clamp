@@ -37,7 +37,18 @@ module.exports = {
 		require('postcss-size-clamp')({
 			range: [420, 1620],     // default viewport/container range
 			unit: 'cqw',            // default unit (vw, cqw, cqi, cqb, %)
-			blacklist: ['container-name'] // properties to ignore
+			blacklist: [            // properties to ignore
+				'container-name',
+				'grid-template-areas',
+				'grid-template',
+				'grid-area',
+				'content',
+				'list-style',
+				'transition',
+				'animation',
+				'transform',
+				'display'
+			]
 		}),
 		require('postcss-preset-env'),
 	],

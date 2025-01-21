@@ -1,7 +1,18 @@
 const DEFAULT_OPTIONS = {
-	range: [420, 1620],
-	unit: 'cqw',
-	blacklist: ['container-name']
+    range: [420, 1620],
+    unit: 'cqw',
+    blacklist: [
+        'container-name',
+        'grid-template-areas',
+        'grid-template',
+        'grid-area',
+        'content',
+        'list-style',
+        'transition',
+        'animation',
+        'transform',
+        'display'
+    ]
 };
 
 const VALID_UNITS = ['vw', 'cqw', 'cqi', 'cqb', '%', '--*'];
