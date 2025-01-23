@@ -27,6 +27,6 @@
 	"devDependencies": {
 		"jest": "^29.7.0",
 		"jest-postcss": "^0.1.0",
-		"postcss": "^8.4.47"
+		"postcss": "^8.4.49"
 	}
 }
