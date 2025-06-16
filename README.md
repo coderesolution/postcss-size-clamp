@@ -21,6 +21,7 @@ Unlike similar plugins, this plugin:
 -   Supports custom container widths via CSS custom properties
 -   Works with any CSS property that accepts pixel values
 -   Includes property blacklisting for granular control
+- 	Preserves the `!important` flag
 
 ## Installation
 
@@ -69,6 +70,13 @@ module.exports = {
 .element {
 	font-size: responsive 16px 32px / 1.5;  /* Sets both font-size and line-height */
 }
+
+/* Using !important flag */
+.element {
+	font-size: responsive 16px 32px !important;
+	/* or with line-height */
+	font-size: responsive 16px 32px / 1.5 !important;
+}
 ```
 
 Outputs:
@@ -84,6 +92,13 @@ Outputs:
 .element {
 	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px);
 	line-height: 1.5;
+}
+
+.element {
+	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px) !important;
+	/* or with line-height */
+	font-size: clamp(16px, calc(10.4px + 1.33333cqw), 32px) !important;
+	line-height: 1.5 !important;
 }
 ```
 
