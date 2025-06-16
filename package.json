@@ -25,7 +25,10 @@
 		"postcss": "^8.0.0"
 	},
 	"devDependencies": {
-		"jest": "^30.0.0",
+		"@babel/core": "^7.27.4",
+		"@babel/preset-env": "^7.27.2",
+		"babel-jest": "^29.7.0",
+		"jest": "^29.7.0",
 		"jest-postcss": "^0.1.0",
 		"postcss": "^8.5.5"
 	}
