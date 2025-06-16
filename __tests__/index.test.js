@@ -193,4 +193,31 @@ describe('postcss-size-clamp', () => {
 		const output = await run(input);
 		expect(output).toContain('var(--container-width)');
 	});
+
+	it('preserves !important flag on responsive properties', async () => {
+		const input = '.test { font-size: responsive 16px 32px !important; }';
+		const output = await run(input);
+		expect(output).toContain('!important');
+	});
+
+	it('preserves !important flag on line-height when using shorthand', async () => {
+		const input = '.test { font-size: responsive 16px 32px / 1.5 !important; }';
+		const output = await run(input);
+		expect(output).toContain('font-size: clamp(16px');
+		expect(output).toContain('!important');
+		expect(output).toContain('line-height: 1.5 !important');
+	});
+
+	it('handles !important with custom fluid values', async () => {
+		const input = `
+			.test {
+				margin: responsive 20px 48px !important;
+				fluid-range: 768px 1920px;
+				fluid-unit: vw;
+			}
+		`;
+		const output = await run(input);
+		expect(output).toContain('!important');
+		expect(output).toContain('vw');
+	});
 });

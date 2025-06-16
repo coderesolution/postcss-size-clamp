@@ -36,6 +36,10 @@ module.exports = (opts = {}) => {
 			const value = decl.value.trim();
 			if (!value.startsWith('responsive')) return;
 
+			// Check for !important flag
+			const hasImportant = value.endsWith('!important');
+			const valueWithoutImportant = hasImportant ? value.slice(0, -10).trim() : value;
+
 			// Cache the fluid values on the parent rule if not already done
 			if (!decl.parent._fluidValues) {
 				// Check for fluid-range and fluid-unit in current rule only
@@ -79,7 +83,7 @@ module.exports = (opts = {}) => {
 			let rangeUnit = decl.parent._fluidValues.unit;
 
 			// Split the value to check for line-height
-			const [fontPart, lineHeightPart] = value.split('/').map((part) => part.trim());
+			const [fontPart, lineHeightPart] = valueWithoutImportant.split('/').map((part) => part.trim());
 
 			// Parse the font size values
 			const parts = fontPart.split(' ').filter(Boolean);
@@ -101,7 +105,7 @@ module.exports = (opts = {}) => {
                 ? `var(${rangeUnit})`
                 : `100${rangeUnit}`;
 
-            const clampValue = `clamp(${minSize}px, calc(${minSize}px + (${maxSize} - ${minSize}) * ((${containerWidth} - ${minRange}px) / (${maxRange} - ${minRange}))), ${maxSize}px)`;
+            const clampValue = `clamp(${minSize}px, calc(${minSize}px + (${maxSize} - ${minSize}) * ((${containerWidth} - ${minRange}px) / (${maxRange} - ${minRange}))), ${maxSize}px)${hasImportant ? ' !important' : ''}`;
 
 			// Replace the declaration value
 			decl.value = clampValue;
@@ -115,12 +119,12 @@ module.exports = (opts = {}) => {
 
 				if (existingLineHeight) {
 					// Update existing line-height
-					existingLineHeight.value = lineHeightPart;
+					existingLineHeight.value = lineHeightPart + (hasImportant ? ' !important' : '');
 				} else {
 					// Create new line-height declaration
 					decl.cloneBefore({
 						prop: 'line-height',
-						value: lineHeightPart,
+						value: lineHeightPart + (hasImportant ? ' !important' : ''),
 					});
 				}
 			}
